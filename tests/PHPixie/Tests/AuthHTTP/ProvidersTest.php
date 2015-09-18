@@ -62,4 +62,16 @@ class ProvidersTest extends \PHPixie\Tests\Auth\Providers\Builder\Implementation
     {
         $this->assertSame('http', $this->providers->name());
     }
+    
+    protected function builderMock($methods = array())
+    {
+        return $this->getMock(
+            '\PHPixie\AuthHTTP\Providers',
+            $methods,
+            array(
+                $this->security,
+                $this->httpContextContainer
+            )
+        );
+    }
 }
