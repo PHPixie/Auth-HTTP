@@ -64,7 +64,7 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         }
         
         $user = $this->domain->requireUser();
-        $token = $this->tokenHandler()->create($user, $lifetime);
+        $token = $this->tokenHandler()->create($user->id(), $lifetime);
         $this->setCookie($token);
     }
     

@@ -152,7 +152,8 @@ class CookieTest extends \PHPixie\Tests\Auth\Providers\Provider\ImplementationTe
         }
         
         $token = $this->getToken();
-        $this->method($this->tokenHandler, 'create', $token, array($user, $lifetime), 0);
+        $this->method($user, 'id', 7, array(), 0);
+        $this->method($this->tokenHandler, 'create', $token, array(7, $lifetime), 0);
         
         if($isFirst) {
             $this->prepareCookieName($configAt, $domainAt);
