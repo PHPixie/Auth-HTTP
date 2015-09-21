@@ -86,7 +86,11 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         $cookies->set(
             $this->cookieName(),
             $token->string(),
-            $token->expires() - time()
+            $token->expires() - time(),
+            '/',
+            null,
+            false,
+            true
         );
     }
     

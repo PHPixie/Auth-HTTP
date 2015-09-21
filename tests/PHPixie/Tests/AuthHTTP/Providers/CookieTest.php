@@ -223,8 +223,17 @@ class CookieTest extends \PHPixie\Tests\Auth\Providers\Provider\ImplementationTe
         $this->method($this->cookies, 'set', function() use($self, $cookieName) {
             $args = func_get_args();
             
-            $self->assertSame($cookieName, $args[0]);
-            $self->assertSame('pixie', $args[1]);
+            $expected = array(
+                $cookieName,
+                'pixie',
+                $args[2],
+                '/',
+                null,
+                false,
+                true
+            );
+            $self->assertSame($expected, $args);
+            
             $self->assertTrue($args[2]+time()-100 <= 1);
         }, null, $cookiesAt++);
     }
