@@ -47,13 +47,14 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
             $this->setCookie($token);
         }
         
+        $this->domain->setUser($user, $this->name);
+        
         $persistProviders = $this->configData->get('persistProviders', array());
         
         foreach($persistProviders as $providerName) {
             $this->domain->provider($providerName)->persist();
         }
         
-        $this->domain->setUser($user, $this->name);
         return $user;
     }
     
