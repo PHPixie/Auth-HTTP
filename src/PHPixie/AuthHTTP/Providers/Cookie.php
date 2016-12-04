@@ -5,11 +5,22 @@ namespace PHPixie\AuthHTTP\Providers;
 class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
              implements \PHPixie\Auth\Providers\Provider\Persistent
 {
+    /** @var \PHPixie\Security\Tokens */
     protected $tokens;
+    /** @var \PHPixie\Framework\Context */
     protected $httpContextContainer;
+    /** @var string */
     protected $cookieName;
+    /** @var \PHPixie\Security\Tokens\Handler */
     protected $tokenHandler;
-    
+
+    /**
+     * @param \PHPixie\Security\Tokens $tokens
+     * @param \PHPixie\Framework\Context $httpContextContainer
+     * @param \PHPixie\Auth\Domains\Domain $domain
+     * @param string $name
+     * @param \PHPixie\Slice\Type\ArrayData $configData
+     */
     public function __construct($tokens, $httpContextContainer, $domain, $name, $configData)
     {
         $this->tokens               = $tokens;
@@ -17,7 +28,10 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         
         parent::__construct($domain, $name, $configData);
     }
-    
+
+    /**
+     * @return \PHPixie\AuthLogin\Repository\User
+     */
     public function check()
     {
         $encodedToken = $this->getCookie();
@@ -25,7 +39,7 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         if($encodedToken === null) {
             return null;
         }
-        
+        /** @var \PHPixie\Security\Tokens\Token $token */
         $token = $this->tokenHandler()->getByString($encodedToken);
         
         if($token === null) {
@@ -52,12 +66,18 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         $persistProviders = $this->configData->get('persistProviders', array());
         
         foreach($persistProviders as $providerName) {
-            $this->domain->provider($providerName)->persist();
+            /** @var \PHPixie\Auth\Providers\Provider\Persistent $provider */
+            $provider = $this->domain->provider($providerName);
+            $provider->persist();
         }
         
         return $user;
     }
-    
+
+    /**
+     * @param int $lifetime
+     * @throws \PHPixie\Auth\Exception
+     */
     public function persist($lifetime = null)
     {
         if($lifetime === null) {
@@ -80,7 +100,10 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         $this->unsetCookie();
         $this->removeToken($encodedToken);
     }
-    
+
+    /**
+     * @param \PHPixie\Security\Tokens\Token $token
+     */
     protected function setCookie($token)
     {
         $cookies = $this->cookies();
@@ -131,9 +154,13 @@ class Cookie extends    \PHPixie\Auth\Providers\Provider\Implementation
         
         return $this->tokenHandler;
     }
-    
+
+    /**
+     * @return \PHPixie\HTTP\Context\Cookies
+     */
     protected function cookies()
     {
+        /** @var \PHPixie\HTTP\Context $httpContext */
         $httpContext = $this->httpContextContainer->httpContext();
         return $httpContext->cookies();
     }

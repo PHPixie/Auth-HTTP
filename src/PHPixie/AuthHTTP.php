@@ -4,8 +4,13 @@ namespace PHPixie;
 
 class AuthHTTP
 {
+    /** @var AuthHTTP\Builder */
     protected $builder;
-    
+
+    /**
+     * @param \PHPixie\Security $security
+     * @param \PHPixie\Framework\Context $httpContextContainer
+     */
     public function __construct(
         $security,
         $httpContextContainer
@@ -16,12 +21,18 @@ class AuthHTTP
             $httpContextContainer
         );
     }
-    
+
+    /**
+     * @return AuthHTTP\Providers
+     */
     public function providers()
     {
         return $this->builder->providers();
     }
-    
+
+    /**
+     * @return AuthHTTP\Builder
+     */
     public function builder()
     {
         return $this->builder;
